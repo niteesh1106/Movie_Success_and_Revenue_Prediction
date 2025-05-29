@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie Success and Revenue Predictor</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            font-family: Arial, sans-serif;
+            background: #222 url('https://i.redd.it/zjgs096khv591.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Wider main box */
+        main {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            width: 95%;
+            max-width: 1600px; /* Increased to ~ ChatGPT editor width */
+            overflow-y: auto;
+        }
+
+        h1,
+        h2 {
+            color: #ffd700;
+            text-align: center;
+        }
+
+        form label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        /* Inputs stretch full width */
+        input,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #ffd700;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #ffd700;
+            color: #222;
+            padding: 14px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #ffc107;
+        }
+
+        .prediction-result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: rgba(255, 215, 0, 0.1);
+            border-radius: 8px;
+            font-size: 1.1rem;
+        }
+
+        .error {
+            color: #ff4d4d;
+            margin-top: 15px;
+            font-size: 1rem;
+        }
+
+        /* Smaller footer */
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            text-align: center;
+            padding: 5px;
+            font-size: 0.8rem;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>🎬 Movie Success And Revenue Predictor</h1>
+
+        {% if not prediction %}
+        <form method="POST" action="/predict">
+            <label>Movie Title:</label>
+            <input type="text" name="title" required />
+
+            <label>Cast (comma-separated):</label>
+            <input type="text" name="cast" />
+
+            <label>Director:</label>
+            <input type="text" name="director" />
+
+            <label>Writers:</label>
+            <input type="text" name="writers" />
+
+            <label>Producers:</label>
+            <input type="text" name="producers" />
+
+            <label>Production Companies:</label>
+            <input type="text" name="production_companies" />
+
+            <label>Production Countries:</label>
+            <input type="text" name="production_countries" />
+
+            <label>Genres:</label>
+            <input type="text" name="genres" />
+
+            <label>Spoken Languages:</label>
+            <input type="text" name="spoken_languages" />
+
+            <label>Budget ($):</label>
+            <input type="number" step="any" name="budget" />
+
+            <label>Runtime (min):</label>
+            <input type="number" step="any" name="runtime" />
+
+            <label>Movie Overview:</label>
+            <textarea name="overview"></textarea>
+
+            <label>Release Date:</label>
+            <input type="date" name="release_date" />
+
+            <button type="submit">Predict</button>
+        </form>
+        {% endif %}
+
+        {% if prediction %}
+        <div class="prediction-result">
+            <h2>Prediction Result</h2>
+            <p><strong>Predicted Success:</strong> {{ prediction.label }}</p>
+            <p><strong>Chances of Success:</strong> {{ prediction.success_probability }}</p>
+            <p><strong>Estimated Revenue:</strong> {{ prediction.estimated_revenue }}</p>
+            {% if prediction.importance_chart %}
+            <img src="{{ prediction.importance_chart }}" alt="Top Influencers Chart" />
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error">Error: {{ error }}</div>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Movie Success Predictor</p>
+    </footer>
+</body>
+
+</html>
